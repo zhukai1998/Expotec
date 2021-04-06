@@ -108,3 +108,5 @@ def test_match():
 ```
 可通过 match 上下文管理器的关键字参数，用于测试正则表达式是否匹配异常的字符串表达形式（类似于 TestCase.assertRaisesRegexp 方法从 unittest)的 regexp 参数 match 方法与 re.search 函数，因此在上面的示例中 match='123' 也会起作用的。
 另一种形式的 pytest.raises() 函数，其中传递的函数将用给定的 *args 和 **kwargs 并断言引发了给定的异常
+
+https://www.osgeo.cn/pytest/assert.html
