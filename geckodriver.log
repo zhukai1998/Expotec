@@ -1,0 +1,10 @@
+1617932751076	geckodriver	INFO	Listening on 127.0.0.1:50184
+1617932752097	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/fm/8zscl5xn5z38bl7jp99sy1rw0000gn/T/rust_mozprofile3JSqlc"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1617932755114	Marionette	INFO	Listening on port 50195
+1617932755189	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/actors/AutoCompleteChild.jsm, line 125: Error: Invalid autocomplete selectedIndex
+1617932761327	Marionette	INFO	Stopped listening on port 50195
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
