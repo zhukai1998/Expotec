@@ -82,3 +82,206 @@
 - HTTP 请求 - 添加 - 断言 - JSON 断言
 - JSON 断言
 - Assert JSON Path exists：`$["字段"]`
+
+
+
+# 202104141036更新
+- [参考链接](https://www.cnblogs.com/Chamberlain/p/12287412.html)
+
+## JMeter 基本介绍和使用场景
+
+### 压测不同的协议和应用
+- Web - HTTP, HTTPS(Java, NodeJS, PHP, ASP, .NET)
+- SOAP / REST WebServices
+- FTP
+- Database via JDBC
+- LDAP 轻量目录访问协议
+- Message-oriented middleware(MOM) via JMS
+- Mail - SMTP(S), POP3(S) and IMAP(S)
+- TCP
+
+### 使用场景及优点
+- 功能测试
+- 压力测试
+- 分布式压力测试
+- 纯 Java 开发
+- 上手容易，高性能
+- 提供测试数据分析
+- 各种报表数据图形展示
+
+### 安装
+- 需要 JDK8 + 
+- [文档地址](http://jmeter.apache.org/usermanual/get-started.html)
+- 建议安装 JDK 环境，虽然 JRE 也可以，但是压测 Https 需要 JDK 里面的 keytool 工具
+
+### 目录
+- bin ： 核心可执行文件
+· jmeter 启动文件
+· jmeter-server 分布式压测使用的启动文件
+· jmeter-properties 核心配置文件
+- extras ： 插件拓展的包
+- lib ： 核心的依赖包
+- ext ： 核心包
+- junit ： 单元测试包
+
+## JMeter 核心组件讲解和实操
+- JMeter 基础功能组件介绍线程组和 Sampler
+- 添加 -- 线程 -- 线程组（控制总体并发）
+· 线程数：虚拟用户数。一个虚拟用户占用一个进程或者线程
+· 准备时长（Ramp-Up Period（in seconds））：全部线程启动的时长，比如100个线程，20秒，则表示20秒内100个线程都要启动完成，每秒启动5个线程
+· 循环次数：每个线程发送的次数，假如值为5，100个线程，则会发送500次请求，可以勾选永远循环
+
+- 线程组 -- 添加 -- Sampler（采样器） -- Http（一个线程组下面可以增加几个Sampler）
+· 名称： 采样器名称
+· 注释： 对这个采样器的描述
+· web服务器：
+· 默认协议 http
+· 默认端口 80
+· 服务器名称或IP：请求的目标服务器名称或IP地址
+· 路径： 服务器 URL
+· Use multipart/from-data for HTTP POST: 当发送 POST 请求时，使用 Use multipart/from-data 方法发送，默认不选中
+- 查看测试结果
+· 线程组 -- 添加 -- 监听器 -- 察看结果树
+- JMeter的断言基本使用
+- 增加断言：线程组 -- 添加 -- 断言 -- 响应断言
+· apply to（应用范围）
+· Main sample only：仅当前父取样器进行断言，一般一个请求，如果发一个请求会出发多个，则就有 sub sample
+· 要测试的响应字段：
+· 响应文本：即响应的数据，比如 json 等文本
+· 响应代码：http 的响应状态码，比如200，302， 404
+· 响应信息：http 响应代码对应的响应信息，例如：OK，Found
+· Response Header：响应头
+- 模式匹配规则
+· 包括：包含在里面就成功
+· 匹配：响应内容完全匹配，不区分大小写
+· equals：完全匹配，区分大小写
+- 断言结果监听器：线程组 -- 添加 -- 监听器 -- 断言结果
+· 里面的内容是sampler采样器的名称
+· 断言失败，查看结果树任务结果颜色标红（通过结果树里面双击不通过的记录，可以看到错误信息）
+- 每个 sample 下面可以加单独的结果树，然后同事加多个断言，最外层可以加个结果树进行汇总
+
+
+### JMeter实战之压测结果聚合报告分析
+- 新增聚合报告：线程组 -- 添加 -- 监听器 -- 聚合报告
+· lable：sample的名称
+· Samples：一共发出去多少请求，例如 10 个用户，循环10次，则是100
+· Average：平均响应时间
+· Median：中位数：也就是50%用户的响应时间
+
+90%Line：90%用户的响应不会超过该时间（90% of the samples took no more than this time. The remaining samples at least as long as this)
+· 95%Line：95%用户的响应不会超过该时间
+· 99%Line：99%用户的响应不会超过该时间
+· min：最小响应时间
+· max：最大响应时间
+
+· Error%：错误的请求的数量/请求的总数
+· Throughput：吞吐量--默认情况下表示每秒完成的请求数（Request per Second）可类比为 qps
+· KB/Sec：每秒接收数据量
+
+### JMeter压测脚本 JMX 讲解
+- 打开方式 Sublime 或者 xml 编辑器
+- 运行日志和压测事件查看
+
+### 自定义变量和 CSV 可变参数实操
+- JMeter 用户自定义变量实战
+```
+简介：什么是用户自定义变量，怎样使用
+为什么使用：很多变量在全局中都有使用，或者测试数据更改，可以在一处定义，四处使用
+比如说服务器地址
+1、线程组 -- add -- Config Element（配置原件） -- User Definde Variable(用户定义的变量)
+2、引用方式$(XXX)，在接口中变量中使用
+3、原始查看结果树和非原生查看（基础按钮）
+```
+- JMeter 实战之 CSV 可变参数压测
+```
+简介：
+实战操作 JMeter 读取 CSV 和 Txt 文本文件里面的参数进行压测
+1、线程组 -- add -- Config Element（配置原件） -- CSV data set config（CSV 数据文件设置）
+```
+- CSV文件多参数使用
+```
+简介：在读取的配置文件里面，同时使用多个自定义参数
+1、如果是多个参数需要同时引用，则在 CSV 数据文件里面设置加多个字段 Variabled names(comma-delitited):csv_name, csv_pwd
+
+```
+
+### Mysql 数据库压测实操
+- JMeter 压测实战之 JDBC request 压测 Mysql 讲解
+```
+简介：讲解 JDBC 压测 Mysql 相关准备工作：jar 包添加，配置讲解
+1、Thread Group -- add -- sampler -- JDBC request
+2、jar 包添加 mysql-connector-java-5.1.30.jar
+3、JDBC connection Configuration 配置
+	1.JDBC request -- add -- config element -- JDBC connection configuration
+		核心配置
+			Max Number of connections：最大连接数
+			Max wait：最大等待时间
+			Auto Commit：是否自动提交事务
+			DataBase URL：数据库连接地址 jdbc:mysql://127.0.0.1:3306/blog
+			JDBC Driver Class: 数据库去哦那个，选择对应的 mysql
+			username：数据库用户名
+			password：数据库密码
+
+ ```
+
+ ### JMeter 压测实战之 JDBC request 压测 Mysql，select 语句
+ ```
+简介：使用 JMeter 压测 mysql，select，insert语句
+1、Debug Sampler 使用（结果树中查看）：Thread Group -- add -- sampler -- debug sampler
+2、参数讲解：（sql 结尾不要加；）
+	1.variable name of pool decleared in JDBC connection configuration（和配置文件同名）
+	2.Query Type查询类型
+	3.parameter values 参数值
+	4.parameter types 参数类型
+	5.variable names sql 执行结果变量名
+	6.result variable names 所有结果当作一个对象存储
+	7.query timeouts 查询超时时间
+	8.handle results 处理结果集
+
+ ```
+
+ ### 分布式压测介绍
+ ```
+简介：讲解什么是分布式压测
+	普通压测：单台机可以对目标机器产生的压力比较小，受限因素包括 CPU，网络，IO等
+	分布式压测：利用多台机器向目标机器产生压力，模拟几万用户并发访问
+ ```
+
+### JMeter分布式压测原理
+```
+简介：讲解 JMeter 分布式压测原理
+1、总控机器的节点 master，其他产生压力的机器叫做“肉鸡” server
+2、master 会把压测脚本发送到 server 上面
+3、执行的时候，server 上只需要把 JMeter-server 打开就可以了，不用启动 JMeter
+4、结束后，server 会把压测数据回传给 master，然后 master 汇总输出报告
+5、配置详情
+```
+
+### 高级篇之阿里云 Linux 服务器压测接口实战
+- SpringBoot 接口打包，并用 jar 包方式部署
+```
+简介：用 jar 包方式在控制台进行启动
+	打包 mvn package && java -jar  target/gs-spring-boot-0.1.0.jar
+```
+
+### 阿里云服务器介绍和 ECS 服务器使用
+```
+简介：
+	阿里云服务器介绍和购买 ECS 服务器等
+	推荐购买 2G 内存以上的进行开发学习
+```
+
+### 部署 Java 项目到阿里云服务器和守护进程讲解
+```
+简介：
+	部署项目到阿里云，并启动，公网可以访问
+	1.注意点
+		关闭防火墙
+		阿里云控制台安全策略，开放端口
+	linux 上运行 java -jar *****
+
+	守护进程：nohup java -jar **** &
+		什么是守护进程
+```
+
+
